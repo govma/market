@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Store Pro</title>
+<style>
+*{
+    box-sizing:border-box;
+}
+
+/* ================= LOGIN ================= */
+
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f0f0f,#1c1c1c);
+    color:white;
+}
+
+.container{
+    max-width:420px;
+    margin:30px auto;
+    padding:20px;
+    border-radius:20px;
+}
+
+/* LOGIN BOX */
+#loginBox{
+    background:#141414;
+    box-shadow:0 0 25px rgba(212,175,55,0.3);
+    text-align:center;
+}
+
+#loginBox h1{
+    color:#d4af37;
+}
+
+#loginBox input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:12px;
+    background:#1f1f1f;
+    color:white;
+    font-size:15px;
+}
+
+#loginBox button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    background:#d4af37;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* ================= DASHBOARD ================= */
+
+#dashboard{
+    display:none;
+    background:#f4f7fb;
+    color:#1a1a1a;
+    min-height:100vh;
+    padding:15px;
+}
+
+/* Cards inside dashboard only */
+#dashboard .card{
+    background:#ffffff;
+    border-radius:18px;
+    padding:6px;
+    margin:6px 0;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* Titles */
+#dashboard h1,
+#dashboard h2,
+#dashboard h3{
+    color:#0d47a1;
+}
+
+/* Inputs */
+#dashboard input,
+#dashboard select{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:12px;
+    font-size:14px;
+}
+
+/* Buttons */
+#dashboard button{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#1565c0,#42a5f5);
+    color:white;
+    font-weight:600;
+}
+
+/* Drawer */
+.drawer{
+    position:fixed;
+    top:0;
+    left:-250px;
+    width:200px;
+    height:100%;
+    background:#111;
+    padding:20px;
+    transition:0.4s;
+}
+
+.drawer a{
+    display:block;
+    color:white;
+    margin:15px 0;
+    text-decoration:none;
+}
+
+/* Toast */
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#1565c0;
+    color:white;
+    padding:12px 18px;
+    border-radius:15px;
+}
+
+/* Scroll */
+#customersList,
+#companiesList,
+#logsList{
+    max-height:300px;
+    overflow-y:auto;
+}
+/* Dashboard entry animation */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#dashboard.active {
+    display: block;
+    animation: fadeSlideIn 0.6s ease forwards;
+}
+#dashboard .card {
+    animation: fadeSlideIn 0.5s ease forwards;
+}
+/* LOADING SCREEN */
+#loadingScreen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#0f0f0f,#1c1c1c);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    display:none;
+}
+
+.loader{
+    width:60px;
+    height:60px;
+    border:6px solid rgba(255,255,255,0.2);
+    border-top:6px solid #d4af37;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:15px;
+}
+
+@keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+#loadingScreen p{
+    color:#d4af37;
+    font-weight:bold;
+    font-size:16px;
+}
+/* ===== Agenda Section Compact for All Screens ===== */
+#agendaSection {
+    max-width: 400px;
+    margin: 10px auto;
+}
+
+#agendaSection input[type="text"],
+#agendaSection input[type="date"],
+#agendaSection button {
+    font-size: 12px;
+    padding: 4px 6px;
+    height: 28px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+#agendaSection button {
+    font-size: 12px;
+    padding: 4px 6px;
+    height: 28px;
+}
+
+/* Cards */
+#agendaList .card {
+    padding: 5px 8px;
+    font-size: 12px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 10;
+}
+
+#agendaList .card h3 {
+    font-size: 13px;
+    margin: 0;
+}
+
+#agendaList .card p {
+    font-size: 11px;
+    margin: 0;
+    white-space: normal;
+}
+#agendaList {
+    max-height: 300px;
+    overflow-y: auto;
+}
+#agendaList .card button {
+    font-size: 11px;
+    padding: 2px 5px;
+    width: auto;
+    align-self: flex-start;
+}
+
+/* Responsive Mobile */
+@media (max-width: 480px) {
+    #agendaSection {
+        margin: 5px;
+    }
+
+    #agendaSection input[type="text"],
+    #agendaSection input[type="date"],
+    #agendaSection button {
+        font-size: 11px;
+        padding: 3px 5px;
+        height: 24px;
+    }
+
+    #agendaList .card {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+
+    #agendaList .card h3 {
+        font-size: 12px;
+    }
+
+    #agendaList .card p {
+        font-size: 10px;
+    }
+
+    #agendaList .card button {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="container" id="loginBox">
+<h1>Smart Store Pro</h1>
+<input type="text" id="username" placeholder="Username" value="admin">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">LOGIN</button>
+<div class="progress" id="progress">
+    <div class="progress-bar" id="bar"></div>
+</div>
+</div>
+
+<!-- Dashboard -->
+<div class="container" id="dashboard">
+<div class="drawer" id="drawer">
+    <a href="#" onclick="openSection('customersSection')">تسجيل زبون \ قرض👥 </a>
+    <a href="#" onclick="openSection('companiesSection')">🏢 تسجيل المورد و السلع</a>
+    <a href="#" onclick="openSection('agendaSection')">📅 Agenda / مذكرة </a>
+<a href="#" onclick="openHistorique()">📜 Historique</a>  
+  <a href="#" onclick="clearHistorique()">🗑 مسح Historique</a>
+  <a href="#" onclick="changePassword()">🔑 Change Password</a>
+    <a href="#" onclick="toggleDrawer()"> اغلاق \ Close Menu</a>
+</div>
+
+<div class="dashboard-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+        <div style="font-size:26px;cursor:pointer;color:#d4af37;" onclick="toggleDrawer()">☰</div>
+    </div>
+    <button style="margin-bottom:10px;background:#d4af37;color:black;" onclick="logout()">Déconnexion</button>
+
+    <div class="card">
+        <h3>Total Customers/عدد الزبائن </h3>
+        <p id="totalCust">0</p>
+    </div>
+    <div class="card">
+        <h3>Credits/الزبائن المدينون</h3>
+        <p id="debtors">0</p>
+    </div>
+    <div class="card">
+        <h3>Total Credits/مجموع الديون ب MAD</h3>
+        <p id="totalDebt">0 MAD</p>
+    </div>
+<!-- Dashboard cards for companies -->
+<div class="card">
+    <h3>Total Fournisseurs/عدد المستوردين</h3>
+    <p id="totalCompanies">0</p>
+</div>
+<div class="card">
+    <h3>عدد ديون المستوردون </h3>
+    <p id="unpaidCompanies">0</p>
+</div>
+<div class="card">
+    <h3>Credits Frns/الديون التي عليك</h3>
+    <p id="totalCompaniesPrice">0 MAD</p>
+</div>
+    <!-- Customer Management -->
+    <div id="customersSection" style="display:none;margin-top:15px;">
+        <h2>Customers Management</h2>
+        <input type="text" id="custName" placeholder="Full Name">
+        <input type="text" id="custPhone" placeholder="Phone">
+        <input type="text" id="custCIN" placeholder="CIN">
+        <input type="number" id="custAmount" placeholder="Debt Amount">
+        <input type="text" id="custNote" placeholder="Notes / Chra">
+        <button onclick="addCustomer()">Add Customer</button>
+        <input type="text" id="search" placeholder="Search by Name or CIN" oninput="filterCustomers()">
+        <select id="filterStatus" onchange="filterCustomers()">
+            <option value="all">All / الكل</option>
+            <option value="paid">Paid / مدفوع</option>
+            <option value="unpaid">Unpaid / غير مدفوع</option>
+        </select>
+        <div id="customersList" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- Historique -->
+    <div id="historiqueSection" style="display:none;margin-top:15px;">
+        <h2>Historique</h2>
+        <div id="logsList" style="max-height:250px;overflow-y:auto;"></div>
+    </div>
+<!-- Companies Management Section -->
+<div id="companiesSection" style="display:none;margin-top:15px;">
+    <h2>🏢 Company Management</h2>
+    <input type="text" id="compName" placeholder="Company Name">
+    <input type="text" id="compPhone" placeholder="Phone">
+    <input type="text" id="compCIN" placeholder="CIN">
+    <input type="text" id="compNote" placeholder="Notes / Chra">
+    <input type="number" id="compPrice" placeholder="Price / Amount">
+    <button onclick="addCompany()">Add Company 💼</button>
+    <input type="text" id="searchComp" placeholder="Search by Name or CIN" oninput="filterCompanies()">
+    <select id="filterCompStatus" onchange="filterCompanies()">
+        <option value="all">All / الكل</option>
+        <option value="paid">Paid / مدفوع</option>
+        <option value="unpaid">Unpaid / غير مدفوع</option>
+    </select>
+    <div id="companiesList" style="margin-top:10px;"></div>
+</div>
+</div>
+</div>
+<!-- Change Password Modal -->
+<div id="changePassModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;justify-content:center;align-items:center;">
+  <div style="background:#fff;color:#111;padding:20px;border-radius:12px;max-width:400px;width:90%;text-align:center;position:relative;">
+    <h2>🔑 Change Password</h2>
+    <input type="password" id="currentPassInput" placeholder="Current Password" style="width:90%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
+    <input type="password" id="newPassInput" placeholder="New Password" style="width:90%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
+    <input type="password" id="confirmPassInput" placeholder="Confirm Password" style="width:90%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:10px;">
+    <button onclick="submitChangePassword()" style="background:#1565c0;color:white;width:90%;padding:10px;margin-top:10px;border:none;border-radius:10px;">Change Password</button>
+    <button onclick="closeChangePassModal()" style="background:#ddd;color:#111;width:90%;padding:10px;margin-top:8px;border:none;border-radius:10px;">Cancel</button>
+  </div>
+</div>
+<div id="agendaSection" style="display:none;margin-top:15px;">
+    <h2>📅 Agenda / مذكرة</h2>
+
+    <!-- Form to add reminder -->
+    <div class="agenda-form" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;">
+        <input type="text" id="agendaTitle" placeholder="Title / العنوان" style="flex:2;padding:8px;border-radius:6px;border:1px solid #ccc;">
+        <input type="date" id="agendaDate" style="flex:1;padding:8px;border-radius:6px;border:1px solid #ccc;">
+        <input type="text" id="agendaNote" placeholder="Note / ملاحظة" style="flex:2;padding:8px;border-radius:6px;border:1px solid #ccc;">
+        <button onclick="addAgenda()" style="background:#d4af37;color:black;padding:8px 12px;border:none;border-radius:6px;cursor:pointer;">Add ➕تسجيل</button>
+    </div>
+
+    <!-- Search / filter -->
+    <input type="text" id="searchAgenda" placeholder="Search / بحث" oninput="filterAgenda()" style="width:100%;padding:8px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;">
+
+    <!-- List of reminders -->
+    <div id="agendaList" style="display:flex;flex-direction:column;gap:10px;"></div>
+</div>
+<audio id="sound"><source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg"></audio>
+
+<script>
+// LocalStorage setup
+if(!localStorage.getItem("appPassword")) localStorage.setItem("appPassword","1234");
+if(!localStorage.getItem("customers")) localStorage.setItem("customers", JSON.stringify([]));
+
+if(!localStorage.getItem("companies")) localStorage.setItem("companies", JSON.stringify([]));
+if(!localStorage.getItem("agenda")) localStorage.setItem("agenda", JSON.stringify([]));
+let attempts=0, lockedUntil=0;
+
+function playSound(){
+    const audio = document.getElementById("sound");
+    audio.currentTime = 0;
+    audio.volume = 0;
+    audio.play().catch(e=>console.log("Sound blocked: "+e));
+    
+    // Fade in volume
+    let vol = 0;
+    const fade = setInterval(()=>{
+        if(vol<1){
+            vol += 0.1;
+            audio.volume = Math.min(vol,1);
+        } else clearInterval(fade);
+    },50);
+}
+
+// Login
+function login(){
+    const now=Date.now();
+    if(now<lockedUntil){alert("محاولة كثيرة ❌ انتظر 30 ثانية"); return;}
+    const user=document.getElementById("username").value;
+    const pass=document.getElementById("password").value;
+    const savedPass=localStorage.getItem("appPassword");
+    if(user==="admin" && pass===savedPass){
+        playSound();
+        document.getElementById("loadingScreen").style.display="flex";
+        setTimeout(()=>{document.getElementById("bar").style.width="100%";},100);
+        logAction("Login");
+         setTimeout(()=>{
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+    document.getElementById("loadingScreen").style.display="none";
+},2300);
+    }else{
+        attempts++;
+        if(attempts>=3){lockedUntil=Date.now()+30000; attempts=0; alert("تم قفل الدخول لمدة 30 ثانية");}
+        else alert("بيانات خاطئة ❌");
+    }
+}
+
+// Logout
+function logout(){
+    playSound(); // play sound fade-in
+    
+    const dashboard = document.getElementById("dashboard");
+    dashboard.style.transition = "opacity 2s ease"; // 2 seconds fade
+    dashboard.style.opacity = "0"; // start fade-out
+    
+    setTimeout(()=>{
+        dashboard.style.display = "none";
+        dashboard.style.opacity = "1"; // reset for next time
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("bar").style.width = "0%";
+        document.getElementById("progress").style.display = "none";
+        document.getElementById("password").value = "";
+        logAction("Logout");
+    },2000); // match 2s transition
+}
+
+// Drawer
+function toggleDrawer(){
+    const drawer=document.getElementById("drawer");
+    drawer.style.left = (drawer.style.left==="0px") ? "-250px" : "0px";
+}
+
+// Customers
+function openCustomers(){
+    document.getElementById("customersSection").style.display="block";
+    document.getElementById("historiqueSection").style.display="none";
+    loadCustomers();
+}
+function addCustomer(){
+    let name=document.getElementById("custName").value;
+    let phone=document.getElementById("custPhone").value;
+    let cin=document.getElementById("custCIN").value;
+    let amount=parseFloat(document.getElementById("custAmount").value);
+    let note=document.getElementById("custNote").value;
+    if(!name || !amount){alert("Fill required fields"); return;}
+    let customers=JSON.parse(localStorage.getItem("customers"));
+    customers.push({id:Date.now(), name, phone, cin, amount, note});
+    localStorage.setItem("customers", JSON.stringify(customers));
+    logAction("Add customer: "+name);
+    showToast("Customer Added 👑");
+    loadCustomers();
+    updateDashboard();
+    document.getElementById("custName").value="";
+    document.getElementById("custPhone").value="";
+    document.getElementById("custCIN").value="";
+    document.getElementById("custAmount").value="";
+    document.getElementById("custNote").value="";
+}
+function loadCustomers(){
+    let customers=JSON.parse(localStorage.getItem("customers"));
+    let filter=document.getElementById("filterStatus").value;
+    let search=document.getElementById("search").value.toLowerCase();
+    let list=document.getElementById("customersList");
+    list.innerHTML="";
+    let totalDebt=0, debtors=0;
+    customers.forEach(c=>{
+        let paid = c.amount<=0;
+        // Filter
+        if(filter==="paid" && !paid) return;
+        if(filter==="unpaid" && paid) return;
+        if(!c.name.toLowerCase().includes(search) && !c.cin.toLowerCase().includes(search)) return;
+        totalDebt+=c.amount;
+        if(c.amount>0) debtors++;
+        list.innerHTML+=`<div class="card">
+        <h3>${c.name} (${c.cin})</h3>
+        <p>Debt: ${c.amount} MAD</p>
+        <p>Note: ${c.note}</p>
+        <button onclick="editCustomer(${c.id})">Edit</button>
+        <button onclick="deleteCustomer(${c.id})">Delete</button>
+        </div>`;
+    });
+    updateDashboard();
+}
+function deleteCustomer(id){
+    if(!confirm("Confirm delete?")) return;
+    let customers=JSON.parse(localStorage.getItem("customers"));
+    let removed=customers.find(c=>c.id===id);
+    customers=customers.filter(c=>c.id!==id);
+    localStorage.setItem("customers", JSON.stringify(customers));
+    logAction("Delete customer: "+removed.name);
+    showToast("Customer Deleted ❌");
+    loadCustomers();
+}
+function editCustomer(id){
+    let customers=JSON.parse(localStorage.getItem("customers"));
+    let c=customers.find(c=>c.id===id);
+    let newAmount = prompt("New Debt Amount:",c.amount);
+    let newNote = prompt("Update Note:",c.note);
+    if(newAmount!==null) c.amount=parseFloat(newAmount);
+    if(newNote!==null) c.note=newNote;
+    localStorage.setItem("customers", JSON.stringify(customers));
+    logAction("Edit customer: "+c.name);
+    showToast("Customer Updated ✏️");
+    loadCustomers();
+}
+function filterCustomers(){loadCustomers();}
+function updateDashboard(){
+    let customers=JSON.parse(localStorage.getItem("customers")) || [];
+    let totalDebt=0, debtors=0;
+
+    customers.forEach(c=>{
+        if(c.amount>0) debtors++;
+        totalDebt+=c.amount;
+    });
+
+    animateValue("totalCust",0,customers.length,500);
+    animateValue("debtors",0,debtors,500);
+    animateValue("totalDebt",0,totalDebt,800);
+}
+// Open Companies Section
+function openCompanies(){
+    document.getElementById("companiesSection").style.display="block";
+    document.getElementById("customersSection").style.display="none";
+    document.getElementById("historiqueSection").style.display="none";
+    loadCompanies();
+}
+
+// Add Company
+function openSection(sectionId){
+    const sections = ['customersSection','companiesSection','historiqueSection','agendaSection'];
+    sections.forEach(s=>{
+        document.getElementById(s).style.display = (s===sectionId) ? 'block' : 'none';
+    });
+
+    // Load data for visible section
+    if(sectionId==='customersSection') loadCustomers();
+    if(sectionId==='companiesSection') loadCompanies();
+    if(sectionId==='historiqueSection') loadHistorique();
+        if(sectionId==='agendaSection') loadAgenda();
+
+}
+
+function addCompany(){
+    const name = document.getElementById("compName").value.trim();
+    const phone = document.getElementById("compPhone").value.trim();
+    const cin = document.getElementById("compCIN").value.trim();
+    const note = document.getElementById("compNote").value.trim();
+    const price = parseFloat(document.getElementById("compPrice").value);
+
+    if(!name || isNaN(price)){ alert("Fill required fields ❌"); return; }
+
+    const companies = JSON.parse(localStorage.getItem("companies")) || [];
+    companies.push({id:Date.now(), name, phone, cin, note, price});
+    localStorage.setItem("companies", JSON.stringify(companies));
+
+    showToast("Company Added 💼");
+    loadCompanies();
+
+    document.getElementById("compName").value="";
+    document.getElementById("compPhone").value="";
+    document.getElementById("compCIN").value="";
+    document.getElementById("compNote").value="";
+    document.getElementById("compPrice").value="";
+}
+// Load Companies
+function loadCompanies(){
+    const companies = JSON.parse(localStorage.getItem("companies")) || [];
+    const filter = document.getElementById("filterCompStatus").value;
+    const search = document.getElementById("searchComp").value.toLowerCase();
+    const list = document.getElementById("companiesList");
+    list.innerHTML = "";
+    let totalPrice = 0, unpaid = 0;
+
+    companies.forEach(c=>{
+        const paid = c.price <= 0;
+        if(filter==="paid" && !paid) return;
+        if(filter==="unpaid" && paid) return;
+        if(!c.name.toLowerCase().includes(search) && !c.cin.toLowerCase().includes(search)) return;
+
+        totalPrice += c.price;
+        if(c.price>0) unpaid++;
+
+        list.innerHTML += `
+        <div class="card">
+            <h3>💼 ${c.name} (${c.cin})</h3>
+            <p>Price: ${c.price} MAD</p>
+            <p>Note: ${c.note}</p>
+            <button onclick="editCompany(${c.id})">✏️ Edit</button>
+            <button onclick="deleteCompany(${c.id})">❌ Delete</button>
+        </div>`;
+    });
+
+    document.getElementById("totalCompanies").innerText = companies.length;
+    document.getElementById("unpaidCompanies").innerText = unpaid;
+    document.getElementById("totalCompaniesPrice").innerText = totalPrice + " MAD";
+}
+// Delete Company
+function deleteCompany(id){
+    if(!confirm("Confirm delete?")) return;
+    let companies=JSON.parse(localStorage.getItem("companies"));
+    let removed=companies.find(c=>c.id===id);
+    companies=companies.filter(c=>c.id!==id);
+    localStorage.setItem("companies", JSON.stringify(companies));
+    logAction("Delete company: "+removed.name);
+    showToast("Company Deleted ❌");
+    loadCompanies();
+}
+
+// Edit Company
+function editCompany(id){
+    let companies=JSON.parse(localStorage.getItem("companies"));
+    let c=companies.find(c=>c.id===id);
+    let newPrice = prompt("New Price / Amount:",c.price);
+    let newNote = prompt("Update Note:",c.note);
+    if(newPrice!==null) c.price=parseFloat(newPrice);
+    if(newNote!==null) c.note=newNote;
+    localStorage.setItem("companies", JSON.stringify(companies));
+    logAction("Edit company: "+c.name);
+    showToast("Company Updated ✏️");
+    loadCompanies();
+}
+
+// Filter Companies
+function filterCompanies(){loadCompanies();}
+
+// Load Historique
+function openHistorique(){
+    // Hide other sections
+    document.getElementById("customersSection").style.display = "none";
+    document.getElementById("companiesSection").style.display = "none";
+    document.getElementById("historiqueSection").style.display = "block";
+    
+    // Load logs
+    loadHistorique();
+}
+function loadHistorique(){
+    const logs = JSON.parse(localStorage.getItem("logs")) || [];
+    const list = document.getElementById("logsList");
+    list.innerHTML = "";
+
+    if(logs.length === 0){
+        list.innerHTML = "<p>No historique found 🕒</p>";
+        return;
+    }
+
+    logs.slice().reverse().forEach(log=>{
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<p>${log.date}: ${log.action}</p>`;
+        list.appendChild(div);
+    });
+}
+function clearHistorique(){
+    let code = prompt("Enter App Code to clear historique:");
+    if(code !== localStorage.getItem("appPassword")){
+        alert("Wrong code! ❌");
+        return;
+    }
+
+    if(confirm("Are you sure?")){
+        localStorage.setItem("logs", JSON.stringify([]));
+        showToast("Historique cleared ✅");
+        loadHistorique();
+    }
+}
+function logAction(action){
+    let logs = JSON.parse(localStorage.getItem("logs")) || [];
+
+    const logEntry = {
+        id: Date.now(),
+        action: action,
+        date: new Date().toLocaleString()
+    };
+
+    logs.push(logEntry);
+
+    // 🔥 نحافظو غير على آخر 200 عملية (باش ما يتقلش التطبيق)
+    if(logs.length > 200){
+        logs = logs.slice(-200);
+    }
+
+    localStorage.setItem("logs", JSON.stringify(logs));
+
+    // إذا historique محلول نضيف غير الجديد
+    if(document.getElementById("historiqueSection").style.display === "block"){
+        const list = document.getElementById("logsList");
+
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<p>${logEntry.date}: ${logEntry.action}</p>`;
+
+        list.prepend(div); // الجديد فوق
+    }
+}
+function animateValue(id, start, end, duration) {
+
+    if (start === end) {
+        document.getElementById(id).innerText = end;
+        return;
+    }
+
+    let obj = document.getElementById(id);
+    let startTime = null;
+
+    function animation(currentTime) {
+        if (!startTime) startTime = currentTime;
+        let progress = currentTime - startTime;
+        let percent = Math.min(progress / duration, 1);
+
+        let value = Math.floor(percent * (end - start) + start);
+        obj.innerText = value;
+
+        if (percent < 1) {
+            requestAnimationFrame(animation);
+        }
+    }
+
+    requestAnimationFrame(animation);
+}
+// Open modal
+function changePassword(){
+    document.getElementById("changePassModal").style.display = "flex";
+}
+
+// Close modal
+function closeChangePassModal(){
+    document.getElementById("changePassModal").style.display = "none";
+    // Clear inputs
+    document.getElementById("currentPassInput").value = "";
+    document.getElementById("newPassInput").value = "";
+    document.getElementById("confirmPassInput").value = "";
+}
+
+// Submit new password
+function submitChangePassword(){
+    const current = document.getElementById("currentPassInput").value;
+    const newPass = document.getElementById("newPassInput").value;
+    const confirmPass = document.getElementById("confirmPassInput").value;
+    const savedPass = localStorage.getItem("appPassword");
+
+    if(current !== savedPass){
+        alert("Current password is wrong ❌");
+        return;
+    }
+    if(!newPass){
+        alert("New password cannot be empty ❌");
+        return;
+    }
+    if(newPass !== confirmPass){
+        alert("Passwords do not match ❌");
+        return;
+    }
+
+    localStorage.setItem("appPassword", newPass);
+    logAction("Password changed 🔑"); // ✅ تسجيل في historique
+    showToast("Password changed ✅");
+    closeChangePassModal();
+}
+// Add reminder
+function addAgenda(){
+    const title = document.getElementById("agendaTitle").value.trim();
+    const date = document.getElementById("agendaDate").value;
+
+    if(!title || !date){ alert("Fill required fields ❌"); return; }
+
+    let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+    const id = Date.now();
+    agenda.push({id, title, date, notified: false}); // ✅ add notified
+    localStorage.setItem("agenda", JSON.stringify(agenda));
+
+    logAction("Added reminder: "+title);
+    showToast("Reminder Added 📅");
+    loadAgenda();
+
+    document.getElementById("agendaTitle").value="";
+    document.getElementById("agendaDate").value="";
+}
+function loadAgenda(){
+    const agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+    const list = document.getElementById("agendaList");
+    list.innerHTML = "";
+    const today = new Date().toISOString().split('T')[0];
+
+    agenda.forEach(a=>{
+        list.innerHTML += `<div class="card">
+            <h3>${a.title}</h3>
+            <p>Date: ${a.date}</p>
+            <button onclick="deleteAgenda(${a.id})">❌ Delete</button>
+        </div>`;
+
+        if(a.date === today && !a.notified){
+            showToast(`مذكرة⏰ Reminder: ${a.title}`);
+            a.notified = true;
+        }
+    });
+
+    localStorage.setItem("agenda", JSON.stringify(agenda));
+}
+// Load agenda
+setInterval(()=>{
+    const agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+    const today = new Date().toISOString().split('T')[0];
+
+    agenda.forEach(a=>{
+        if(a.date === today && !a.notified){
+            showToast(`⏰ Reminder: ${a.title}`);
+            a.notified = true; // mark as notified
+        }
+    });
+
+    localStorage.setItem("agenda", JSON.stringify(agenda));
+}, 60000);
+function deleteAgenda(id){
+    // ⚠️ إضافة confirmation
+    if(!confirm("هل أنت متأكد من حذف هذه الملاحظة؟ ❌")) return;
+
+    let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+    agenda = agenda.filter(a => a.id !== id);
+    localStorage.setItem("agenda", JSON.stringify(agenda));
+    logAction("Deleted reminder");
+    showToast("Reminder Deleted ❌");
+    loadAgenda();
+}
+function filterAgenda() {
+    const search = document.getElementById("searchAgenda").value.toLowerCase();
+    const agenda = JSON.parse(localStorage.getItem("agenda")) || [];
+    const list = document.getElementById("agendaList");
+    list.innerHTML = "";
+
+    agenda.forEach(a => {
+        if(a.title.toLowerCase().includes(search) || (a.note && a.note.toLowerCase().includes(search))){
+            list.innerHTML += `<div class="card" style="padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h3>${a.title}</h3>
+                    <p>Date: ${a.date}</p>
+                    <p>${a.note || ''}</p>
+                </div>
+                <button onclick="deleteAgenda(${a.id})" style="background:red;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">❌</button>
+            </div>`;
+        }
+    });
+}
+function showToast(message){
+    let toast=document.createElement("div");
+    toast.className="toast"; toast.innerText=message;
+    document.body.appendChild(toast);
+    setTimeout(()=>{toast.remove();},3000);
+}
+updateDashboard();
+</script>
+<script>
+    // منع right click (context menu)
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// منع long press على الهاتف (touch hold)
+document.addEventListener('touchstart', function(e) {
+    if(e.touches.length > 1) e.preventDefault(); // منع pinch zoom
+}, { passive: false });
+
+document.addEventListener('gesturestart', function(e) {
+    e.preventDefault(); // منع gesture pinch zoom على بعض المتصفحات
+});
+// إضافة state وهمي
+history.pushState(null, null, location.href);
+
+window.addEventListener('popstate', function(event) {
+    // أي محاولة للعودة، نرجعو مباشرة لنفس الصفحة بلا reload
+    history.pushState(null, null, location.href);
+});
+
+// إعادة push state كل ما الصفحة تحمل (باش ما يبقاوش يحاولوا يرجع)
+window.addEventListener('load', function() {
+    history.pushState(null, null, location.href);
+});
+</script>
+<div id="loadingScreen">
+    <div class="loader"></div>
+    <p>Loading Dashboard...</p>
+</div>
+</body>
+</html>
